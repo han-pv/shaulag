@@ -86,7 +86,7 @@ class BrandModelSeeder extends Seeder
                 'name' => $obj['name'],
             ]);
 
-            foreach ($obj['model'] as $model) {
+            foreach ($obj['models'] as $model) {
                 BrandModel::create([
                     'brand_id' => $brand->id,
                     'name' => $model,
