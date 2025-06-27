@@ -32,7 +32,7 @@ class Car extends Model
 
     public function year()
     {
-        return $this->belongsTo(BrandModel::class);
+        return $this->belongsTo(Year::class);
     }
 
 }

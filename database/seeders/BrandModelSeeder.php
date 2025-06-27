@@ -17,6 +17,7 @@ class BrandModelSeeder extends Seeder
         $objs = [
             [
                 'name' => 'BMW',
+                'logo' => 'bmw.png',
                 'models' => [
                     'X6',
                     'X5',
@@ -30,6 +31,7 @@ class BrandModelSeeder extends Seeder
 
             [
                 'name' => 'Mercedes-Benz',
+                'logo' => 'mercedes-benz.png',
                 'models' => [
                     'S-class',
                     'E-class',
@@ -40,6 +42,7 @@ class BrandModelSeeder extends Seeder
 
             [
                 'name' => 'Toyota',
+                'logo' => 'toyota.png',
                 'models' => [
                     'Camry',
                     'Avolon',
@@ -53,6 +56,7 @@ class BrandModelSeeder extends Seeder
 
             [
                 'name' => 'Lexus',
+                'logo' => 'lexus.png',
                 'models' => [
                     'LX',
                     'RX',
@@ -63,6 +67,7 @@ class BrandModelSeeder extends Seeder
 
             [
                 'name' => 'Hyundai',
+                'logo' => 'hyundai.png',
                 'models' => [
                     'Sonata',
                     'Azera',
@@ -73,6 +78,7 @@ class BrandModelSeeder extends Seeder
 
             [
                 'name' => 'Nissan',
+                'logo' => null,
                 'models' => [
                     'Pathfinder',
                     'Altima',
@@ -84,6 +90,7 @@ class BrandModelSeeder extends Seeder
         foreach ($objs as $obj) {
             $brand = Brand::create([
                 'name' => $obj['name'],
+                'logo' => $obj['logo'],
             ]);
 
             foreach ($obj['models'] as $model) {

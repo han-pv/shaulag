@@ -12,13 +12,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $brandModels = BrandModel::with('brand')->get();
-        $locations = Location::all();
+        $brands = Brand::withCount('cars')->get();
+        $locations = Location::withCount('cars')->get();
         $colors = Color::all();
         
         return view('home.index')->with(
             [
-                'brandModels' => $brandModels,
+                'brands' => $brands,
                 'locations' => $locations,
                 'colors' => $colors,
             ]
