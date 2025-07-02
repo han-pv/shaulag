@@ -13,6 +13,7 @@ class LocationSeeder extends Seeder
         $objs = [
             'Arkadag',
             'Ashgabat',
+            'Ahal',
             'Balkan',
             'Dashoguz',
             'Lebap',

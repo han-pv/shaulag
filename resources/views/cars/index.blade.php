@@ -8,40 +8,47 @@
 
         <div class="row justify-content-between">
             <div class="col-3">
-                <form>
+                <form action="{{ route('cars') }}" method="get">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Title:</label>
                         <input type="text" class="form-control">
                         <div id="title" class="form-text"></div>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Brand:</label>
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                        <label for="brand" class="form-label">Brand:</label>
+                        <select id="brand" name="brand" class="form-select">
+                            <option value="">-</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Model:</label>
-                        <input type="text" class="form-control">
-                        <div id="title" class="form-text"></div>
+                        <label for="location" class="form-label">Location:</label>
+                        <select id="location" name="location" class="form-select">
+                            <option value="">-</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}">{{ $location->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Location:</label>
-                        <input type="text" class="form-control">
-                        <div id="title" class="form-text"></div>
+                        <label for="year" class="form-label">Year:</label>
+                        <select id="year" name="year" class="form-select">
+                            <option value="">-</option>
+                            @foreach ($years as $year)
+                                <option value="{{ $year->id }}">{{ $year->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Year:</label>
-                        <input type="text" class="form-control">
-                        <div id="title" class="form-text"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Color:</label>
-                        <input type="text" class="form-control">
-                        <div id="title" class="form-text"></div>
+                        <label for="color" class="form-label">Color:</label>
+                        <select id="color" name="color" class="form-select">
+                            <option value="">-</option>
+                            @foreach ($colors as $color)
+                                <option value="{{ $color->id }}">{{ $color->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Price:</label>
@@ -57,13 +64,13 @@
                         </div>
                         <div id="title" class="form-text"></div>
                     </div>
-                    <button type="reset" class="btn btn-secondary"><i class="bi bi-x"></i> Reset</button>
+                    <a href="{{ route('cars') }}" class="btn btn-secondary"><i class="bi bi-x"></i> Reset</a>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
             <div class="col-9">
                 <div class="row row-cols-3 gy-3">
-                    @foreach ($cars as $car)
+                    @forelse ($cars as $car)
                         <div class="col">
                             <div class="border rounded-3 h-100 my-2 py-2 px-3">
                                 <div>
@@ -75,11 +82,11 @@
                                     <div class="d-flex mb-2">
                                         <div class="">
                                             <i class="bi bi-geo-alt"></i> <span
-                                                class="text-secondary">{{ $car->location->name }}</span>
+                                                class="text-secondary {{ isset($f_location) ? 'mark' : '' }}">{{ $car->location->name }}</span>
                                         </div>
                                         <div class="mx-3">
                                             <i class="bi bi-calendar"></i> <span
-                                                class="text-secondary">{{ $car->year->name }}</span>
+                                                class="text-secondary {{ isset($f_year) ? 'mark' : '' }}">{{ $car->year->name }}</span>
                                         </div>
                                         <div>
                                             <i class="bi bi-palette2"></i> <span
@@ -101,10 +108,18 @@
                             </div>
 
                         </div>
-                    @endforeach
+                    @empty
+                        <div class="col-12">
+                            <div class="display-4 text-center fw-semibold">
+                                Car not found
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+                <div class="my-5">
+                    {{ $cars->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
