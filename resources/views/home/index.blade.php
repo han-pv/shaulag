@@ -16,8 +16,9 @@
                     <div class="bg-white text-center border border-1 rounded-2 h-100 p-2">
                         <img src="{{ $brand->logo ? asset('img/brands/' . $brand->logo) : 'surat yok' }}" class="img-fluid"
                             alt="">
-                        <div class="h5 fw-bold text-dark mt-2">{{ $brand->name }} <span
-                                class="fw-light small text-secondary ms-2">{{ $brand->cars_count }}</span></div>
+                        <a href="{{ route('cars', ['brand' => $brand->id]) }}"
+                            class="d-block text-decoration-none stretched-link h5 fw-bold text-dark mt-2">{{ $brand->name }} <span
+                                class="fw-light small text-secondary ms-2">{{ $brand->cars_count }}</span></a>
 
                     </div>
                 </div>
@@ -33,7 +34,8 @@
             @foreach($locations as $location)
                 <div class="col">
                     <div class="bg-white text-center border border-1 rounded-2 h-100 p-2">
-                        <div class="h5 fw-bold text-dark mt-2">{{ $location->name }} <span class="text-secondary fw-light ms-2">{{ $location->cars_count }}</span>
+                        <div class="h5 fw-bold text-dark mt-2">{{ $location->name }} <span
+                                class="text-secondary fw-light ms-2">{{ $location->cars_count }}</span>
                         </div>
 
                     </div>
