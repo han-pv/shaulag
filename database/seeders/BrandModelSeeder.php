@@ -78,7 +78,7 @@ class BrandModelSeeder extends Seeder
 
             [
                 'name' => 'Nissan',
-                'logo' => null,
+                'logo' => 'nissan.png',
                 'models' => [
                     'Pathfinder',
                     'Altima',

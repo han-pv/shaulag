@@ -2,17 +2,17 @@
 
 @section('content')
     <div class="container-xl">
-        <div class="display-4 fw-bold mb-2">
-            Cars
+        <div class="display-6 fw-bold mb-2">
+            Cars {{ $cars->total() }}
         </div>
 
         <div class="row justify-content-between">
             <div class="col-3">
                 <form action="{{ route('cars') }}" method="get" class="mb-5">
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Title:</label>
-                        <input type="text" class="form-control">
-                        <div id="title" class="form-text"></div>
+                        <label for="q" class="form-label">Search:</label>
+                        <input type="text" id="q" name="q" value="{{ $f_q ? $f_q : '' }}" class="form-control"
+                            placeholder="Toyota Corolla">
                     </div>
                     <div class="mb-3">
                         <label for="brand" class="form-label">Brand:</label>
@@ -73,11 +73,13 @@
                         <div class="d-flex">
                             <div class="me-2">
                                 Min:
-                                <input type="text" name="minPrice" value="{{ $f_minPrice > 0 ? $f_minPrice : " " }}" class="form-control">
+                                <input type="text" name="minPrice" value="{{ $f_minPrice > 0 ? $f_minPrice : " " }}"
+                                    class="form-control">
                             </div>
                             <div>
                                 Max:
-                                <input type="text"  name="maxPrice" value="{{ $f_maxPrice > 0 ? $f_maxPrice : " " }}" class="form-control">
+                                <input type="text" name="maxPrice" value="{{ $f_maxPrice > 0 ? $f_maxPrice : " " }}"
+                                    class="form-control">
                             </div>
                         </div>
                         <div id="title" class="form-text"></div>
@@ -88,8 +90,7 @@
                         <label class="form-check-label" for="exchange">Exchange</label>
                     </div>
                     <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" name="credit" value="1" type="checkbox" role="switch"
-                            id="credit" {{ $f_credit ? 'checked' : '' }}>
+                        <input class="form-check-input" name="credit" value="1" type="checkbox" role="switch" id="credit" {{ $f_credit ? 'checked' : '' }}>
                         <label class="form-check-label" for="credit">Credit</label>
                     </div>
                     <a href="{{ route('cars') }}" class="btn btn-secondary"><i class="bi bi-x"></i> Reset</a>
@@ -100,9 +101,9 @@
                 <div class="row row-cols-3 gy-3">
                     @forelse ($cars as $car)
                         <div class="col">
-                            <div class="border rounded-3 h-100 my-2 py-2 px-3">
+                            <div class="position-relative border rounded-3 h-100 my-2 py-2 px-3">
                                 <div>
-                                    <img src="./" alt="">
+                                    <img src="{{ asset('img/cars/' . $car->brand->name . '.png') }}" class="img-fluid opacity-50 rounded-3" style="height: 200px;" alt="{{ $car->brand->name }}">
                                 </div>
                                 <div class="">
                                     <div class="h5 fw-bold text-primary ">{{ $car->title }}</div>
@@ -110,20 +111,20 @@
                                     <div class="d-flex mb-2">
                                         <div class="">
                                             <i class="bi bi-geo-alt"></i> <span
-                                                class="text-secondary {{ isset($f_location) ? 'mark' : '' }}">{{ $car->location->name }}</span>
+                                                class="text-secondary">{{ $car->location->name }}</span>
                                         </div>
                                         <div class="mx-3">
                                             <i class="bi bi-calendar"></i> <span
-                                                class="text-secondary {{ $f_year == $year->id ? 'mark' : '' }}">{{ $car->year->name }}</span>
+                                                class="text-secondary">{{ $car->year->name }}</span>
                                         </div>
                                         <div>
                                             <i class="bi bi-palette2"></i> <span
-                                                class="text-secondary {{ $f_color == $color->id ? 'mark' : '' }}">{{ $car->color->name }}</span>
+                                                class="text-secondary">{{ $car->color->name }}</span>
                                         </div>
 
                                     </div>
-                                    <div class="d-flex">
-                                        <div>
+                                    <div class="d-flex mb-2">
+                                        <div class="">
                                             Exchange: <i
                                                 class="bi bi-{{ $car->exchange ? 'check-lg text-success' : 'x-lg text-danger' }}"></i>
                                         </div>
@@ -131,6 +132,12 @@
                                             Credit: <i
                                                 class="bi bi-{{ $car->credit ? 'check-lg text-success' : 'x-lg text-danger' }}"></i>
                                         </div>
+                                    </div>
+                                    <div class="fst-italic mb-2">
+                                        {{ Str::limit($car->description, 75)}}
+                                    </div>
+                                    <div class="position-absolute end-0 bottom-0 small text-secondary fw-light fst-italic m-3">
+                                        <i class="bi bi-clock"></i> {{ date_format($car->created_at, "m.d.Y")  }}
                                     </div>
                                 </div>
                             </div>

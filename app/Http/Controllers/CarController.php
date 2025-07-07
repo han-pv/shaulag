@@ -14,6 +14,7 @@ class CarController extends Controller
     public function index(Request $request)
     {
         $request->validate([
+            'q' => ['nullable', 'string', 'max:55'],
             'location' => ['nullable', 'integer', 'min:1'],
             'brand' => ['nullable', 'integer', 'min:1'],
             'brandModel' => ['nullable', 'integer', 'min:1'],
@@ -27,6 +28,7 @@ class CarController extends Controller
             'credit' => ['nullable', 'boolean'],
         ]);
 
+        $f_q = $request->has('q') ? $request->q : null;
         $f_location = $request->has('location') ? $request->location : null;
         $f_brand = $request->has('brand') ? $request->brand : null;
         $f_brand_model = $request->has('brandModel') ? $request->brandModel : null;
@@ -37,52 +39,58 @@ class CarController extends Controller
         $f_exchange = $request->has('exchange') ? $request->exchange : 0;
         $f_credit = $request->has('credit') ? $request->credit : 0;
 
-        $cars = Car::when(isset($f_location), function ($query) use ($f_location) {
-            return $query->where('location_id', $f_location);
+        $cars = Car::when(isset($f_q), function ($query) use ($f_q) {
+            return $query->where(function ($query) use ($f_q) {
+                $query->where('title', 'like', '%' . $f_q . '%')
+                    ->orWhere('description', 'like', '%' . $f_q . '%');
+            });
         })
-        ->when(isset($f_brand), function ($query) use ($f_brand) {
-            return $query->where('brand_id', $f_brand);
-        })
-        ->when(isset($f_brand_model), function ($query) use ($f_brand_model) {
-            return $query->where('brand_model_id', $f_brand_model);
-        })
-        ->when(count($f_color) > 0, function ($query) use ($f_color) {
-            return $query->whereIn('color_id', $f_color);
-        })
-        ->when(count($f_year) > 0, function ($query) use ($f_year) {
-            return $query->whereIn('year_id', $f_year);
-        })
-        ->when( $f_minPrice > 0, function ($query) use ($f_minPrice) {
-            return $query->where('price', ">=",$f_minPrice);
-        })
-        ->when( $f_maxPrice > 0, function ($query) use ($f_maxPrice) {
-            return $query->where('price', "<=",$f_maxPrice);
-        })
-        ->when($f_exchange == 1, function ($query)  {
-            return $query->where('exchange', 1);
-        })
-        ->when($f_credit == 1, function ($query)  {
-            return $query->where('credit', 1);
-        })
-        ->orderBy('id', 'desc')
-        ->paginate(60)
-        ->withQueryString();
+            ->when(isset($f_location), function ($query) use ($f_location) {
+                return $query->where('location_id', $f_location);
+            })
+            ->when(isset($f_brand), function ($query) use ($f_brand) {
+                return $query->where('brand_id', $f_brand);
+            })
+            ->when(isset($f_brand_model), function ($query) use ($f_brand_model) {
+                return $query->where('brand_model_id', $f_brand_model);
+            })
+            ->when(count($f_color) > 0, function ($query) use ($f_color) {
+                return $query->whereIn('color_id', $f_color);
+            })
+            ->when(count($f_year) > 0, function ($query) use ($f_year) {
+                return $query->whereIn('year_id', $f_year);
+            })
+            ->when($f_minPrice > 0, function ($query) use ($f_minPrice) {
+                return $query->where('price', ">=", $f_minPrice);
+            })
+            ->when($f_maxPrice > 0, function ($query) use ($f_maxPrice) {
+                return $query->where('price', "<=", $f_maxPrice);
+            })
+            ->when($f_exchange == 1, function ($query) {
+                return $query->where('exchange', 1);
+            })
+            ->when($f_credit == 1, function ($query) {
+                return $query->where('credit', 1);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(60)
+            ->withQueryString();
 
-        $locations = Location::withCount('cars')-> get();
+        $locations = Location::withCount('cars')->get();
 
         $colors = Color::withCount('cars')
-        ->orderBy('name')
-        ->get();
+            ->orderBy('name')
+            ->get();
 
         $years = Year::withCount('cars')
-        ->orderBy('name', 'desc')
-        ->get();
+            ->orderBy('name', 'desc')
+            ->get();
 
         $brands = Brand::with('brandModels')
-        ->withCount('cars')
-        ->orderBy('name')
-        ->get();
-        
+            ->withCount('cars')
+            ->orderBy('name')
+            ->get();
+
         return view('cars.index')->with(
             [
                 'cars' => $cars,
@@ -90,6 +98,7 @@ class CarController extends Controller
                 'brands' => $brands,
                 'colors' => $colors,
                 'years' => $years,
+                'f_q' => $f_q,
                 'f_location' => $f_location,
                 'f_brand' => $f_brand,
                 'f_brand_model' => $f_brand_model,
